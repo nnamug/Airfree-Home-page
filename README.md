@@ -24,7 +24,22 @@ npm run dev
 - `/` - Corporate website and infrastructure platform gateway.
 - `/admin` - Superadmin control center prototype.
 - `/api/content` - Structured content payload used by the site.
+- `/platforms/[slug]` - Infrastructure platform detail pages.
+- `/resources` - Public resource listing.
+- `/api/health` - Service/module health endpoint.
+- `/api/docs` - Local API documentation.
+- `/api/openapi.json` - OpenAPI 3.1 contract.
+- `/sitemap.xml` - Generated sitemap.
+- `/robots.txt` - Crawler policy.
 
 ## Production Path
 
 The current build is a strong implementation foundation. To make it a fully operational CMS, connect the content registry and forms to the D1 schema, store media bytes in R2/S3-compatible storage, add authenticated admin routes, and enforce RBAC in route handlers.
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+Nginx reverse proxy scaffolding lives in `deploy/nginx/airfree-home.conf`.

@@ -8,8 +8,33 @@ export function GET() {
     endpoints: [
       {
         method: "GET",
+        path: "/api/health",
+        description: "Returns local service health, module status, and content counts.",
+      },
+      {
+        method: "GET",
         path: "/api/content",
         description: "Returns the default CMS content model used to seed the local browser CMS.",
+      },
+      {
+        method: "GET",
+        path: "/api/platforms",
+        description: "Returns infrastructure platform records.",
+      },
+      {
+        method: "GET",
+        path: "/api/leads",
+        description: "Returns seed lead records and the production persistence note.",
+      },
+      {
+        method: "POST",
+        path: "/api/leads",
+        description: "Validates a lead payload and returns the production persistence contract.",
+      },
+      {
+        method: "GET",
+        path: "/api/openapi.json",
+        description: "Returns OpenAPI 3.1 documentation for the local API surface.",
       },
       {
         method: "GET",
