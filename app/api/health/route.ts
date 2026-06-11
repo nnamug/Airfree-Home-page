@@ -15,8 +15,8 @@ export function GET() {
       seoRoutes: "operational",
       database: "schema-ready",
       mediaStorage: "metadata-only",
-      authentication: "planned",
-      analytics: "planned",
+      authentication: "local-contract",
+      analytics: "local-events",
     },
     counts: {
       platforms: defaultCmsData.platforms.length,

@@ -722,6 +722,38 @@ textarea {
   color: #0d1726;
 }
 
+.login-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 72% 20%, rgba(55, 194, 216, 0.16), transparent 24rem),
+    #eef3f7;
+}
+
+.login-panel {
+  display: grid;
+  gap: 28px;
+  width: min(560px, 100%);
+  padding: 32px;
+  border: 1px solid #d5e0ea;
+  border-radius: 8px;
+  background: white;
+}
+
+.login-panel h1 {
+  margin: 0;
+  color: #102034;
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1.02;
+}
+
+.login-panel p {
+  color: #52667c;
+  line-height: 1.7;
+}
+
 .admin-sidebar {
   position: sticky;
   top: 0;
@@ -1034,6 +1066,50 @@ textarea {
   color: #52667c;
 }
 
+.session-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #e2e9f0;
+  border-radius: 6px;
+  background: #f9fbfd;
+}
+
+.session-strip span {
+  color: #14835b;
+  font-weight: 900;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.analytics-grid article {
+  padding: 16px;
+  border: 1px solid #e2e9f0;
+  border-radius: 6px;
+  background: #f9fbfd;
+}
+
+.analytics-grid span {
+  color: #52667c;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.analytics-grid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 30px;
+}
+
 .role-grid em {
   color: #0f7f98;
   font-size: 12px;
@@ -1189,6 +1265,7 @@ textarea {
   .social-table .table-row,
   .lead-table .table-row,
   .audit-list article,
+  .analytics-grid,
   .two-col-fields {
     grid-template-columns: 1fr;
   }

@@ -72,6 +72,21 @@ export type AuditLog = {
   createdAt: string;
 };
 
+export type AnalyticsEvent = {
+  id: string;
+  type: "page_view" | "lead_created" | "admin_action" | "content_publish";
+  label: string;
+  path: string;
+  createdAt: string;
+};
+
+export type ContentVersion = {
+  id: string;
+  label: string;
+  createdAt: string;
+  snapshot: Omit<AirfreeCmsData, "versions">;
+};
+
 export type AirfreeCmsData = {
   brand: typeof brand;
   navigation: string[];
@@ -86,6 +101,8 @@ export type AirfreeCmsData = {
   leads: Lead[];
   seo: SeoSettings;
   auditLogs: AuditLog[];
+  analyticsEvents: AnalyticsEvent[];
+  versions: ContentVersion[];
   settings: {
     animationsEnabled: boolean;
     maintenanceMode: boolean;
@@ -331,6 +348,23 @@ export const defaultCmsData: AirfreeCmsData = {
       createdAt: "2026-06-10T12:00:00.000Z",
     },
   ],
+  analyticsEvents: [
+    {
+      id: "event-seed-home",
+      type: "page_view",
+      label: "Homepage viewed",
+      path: "/",
+      createdAt: "2026-06-10T12:00:00.000Z",
+    },
+    {
+      id: "event-seed-admin",
+      type: "admin_action",
+      label: "Superadmin opened",
+      path: "/admin",
+      createdAt: "2026-06-10T12:10:00.000Z",
+    },
+  ],
+  versions: [],
   settings: {
     animationsEnabled: true,
     maintenanceMode: false,

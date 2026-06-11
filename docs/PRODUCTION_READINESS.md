@@ -5,6 +5,8 @@
 The application is a local-first corporate website and CMS prototype. It has a
 public website, Superadmin UI, local CMS persistence, API contracts, security
 headers, SEO routes, database schema, and Docker/Nginx deployment scaffolding.
+It also includes local authentication/MFA contracts and browser-side admin
+session handling for development.
 
 ## Required Production Services
 
@@ -40,3 +42,11 @@ headers, SEO routes, database schema, and Docker/Nginx deployment scaffolding.
 ## Current Health Endpoint
 
 `GET /api/health` returns local service status and module readiness.
+
+## Local Auth Contracts
+
+- `POST /api/auth/login`
+- `POST /api/auth/mfa/verify`
+
+These endpoints validate request/response shape for production auth but do not
+issue real server-side sessions yet.

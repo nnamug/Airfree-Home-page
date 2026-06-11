@@ -1,10 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useAirfreeCms } from "@/lib/use-airfree-cms";
 
 export default function HomePageClient() {
-  const { cms, addLead } = useAirfreeCms();
+  const { cms, addLead, trackEvent } = useAirfreeCms();
   const [lead, setLead] = useState({
     name: "",
     company: "",
@@ -13,6 +13,10 @@ export default function HomePageClient() {
     inquiry: "Full platform suite",
   });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    trackEvent("page_view", "Homepage viewed", "/");
+  }, []);
 
   function submitLead(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

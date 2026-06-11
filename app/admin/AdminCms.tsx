@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import { BlogPost, MediaAsset, Platform } from "@/lib/airfree-content";
 import { useAirfreeCms } from "@/lib/use-airfree-cms";
 
@@ -18,9 +18,24 @@ function fieldValue(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | 
 }
 
 export default function AdminCms() {
-  const { cms, leadStats, updateCms, resetCms, exportCms } = useAirfreeCms();
+  const {
+    cms,
+    leadStats,
+    updateCms,
+    resetCms,
+    restoreVersion,
+    session,
+    login,
+    logout,
+    exportCms,
+  } = useAirfreeCms();
   const [active, setActive] = useState("Dashboard");
   const [copied, setCopied] = useState(false);
+  const [loginForm, setLoginForm] = useState({
+    user: "superadmin@airfree.local",
+    role: "Superadmin",
+    mfaCode: "",
+  });
 
   const navItems = [
     "Dashboard",
@@ -32,6 +47,8 @@ export default function AdminCms() {
     "Social",
     "Blogs",
     "Leads",
+    "Analytics",
+    "Versions",
     "Users",
     "Audit",
     "Settings",
@@ -110,6 +127,53 @@ export default function AdminCms() {
     window.setTimeout(() => setCopied(false), 1800);
   }
 
+  function submitLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    login(loginForm.user, loginForm.role, loginForm.mfaCode);
+  }
+
+  if (!session.authenticated) {
+    return (
+      <main className="login-shell">
+        <section className="login-panel">
+          <a className="brand-mark dark-mark" href="/">
+            <span>AF</span>
+            <strong>AIRFREE</strong>
+          </a>
+          <div>
+            <p className="eyebrow light">Superadmin access</p>
+            <h1>Verify local administrator session</h1>
+            <p>
+              This localhost gate simulates the JWT/MFA login flow required for
+              production. Enter any user and a 4+ digit MFA code.
+            </p>
+          </div>
+          <form onSubmit={submitLogin} className="form-panel">
+            <label>
+              User
+              <input value={loginForm.user} onChange={(event) => setLoginForm({ ...loginForm, user: fieldValue(event) })} />
+            </label>
+            <label>
+              Role
+              <select value={loginForm.role} onChange={(event) => setLoginForm({ ...loginForm, role: fieldValue(event) })}>
+                {roles.map(([role]) => (
+                  <option key={role}>{role}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              MFA code
+              <input value={loginForm.mfaCode} onChange={(event) => setLoginForm({ ...loginForm, mfaCode: fieldValue(event) })} placeholder="123456" />
+            </label>
+            <button className="button-primary light-button" type="submit">
+              Sign in
+            </button>
+          </form>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
@@ -141,6 +205,9 @@ export default function AdminCms() {
             <a href="/" className="button-secondary admin-button">
               View site
             </a>
+            <button type="button" className="admin-button" onClick={logout}>
+              Sign out
+            </button>
             <button type="button" className="admin-danger" onClick={resetCms}>
               Reset CMS
             </button>
@@ -401,7 +468,11 @@ export default function AdminCms() {
           <section className="admin-panel wide">
             <div className="panel-heading">
               <h2>RBAC role matrix</h2>
-              <span>MFA ready</span>
+              <span>{session.role}</span>
+            </div>
+            <div className="session-strip">
+              <strong>{session.user}</strong>
+              <span>MFA verified: {session.mfaVerified ? "yes" : "no"}</span>
             </div>
             <div className="role-grid">
               {roles.map(([role, scope, permission]) => (
@@ -409,6 +480,59 @@ export default function AdminCms() {
                   <strong>{role}</strong>
                   <span>{scope}</span>
                   <em>{permission}</em>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {active === "Analytics" ? (
+          <section className="admin-panel wide">
+            <div className="panel-heading">
+              <h2>Analytics events</h2>
+              <span>{cms.analyticsEvents.length} events</span>
+            </div>
+            <div className="analytics-grid">
+              {(["page_view", "lead_created", "admin_action", "content_publish"] as const).map((type) => (
+                <article key={type}>
+                  <span>{type}</span>
+                  <strong>{cms.analyticsEvents.filter((event) => event.type === type).length}</strong>
+                </article>
+              ))}
+            </div>
+            <div className="audit-list">
+              {cms.analyticsEvents.slice(0, 20).map((event) => (
+                <article key={event.id}>
+                  <strong>{event.label}</strong>
+                  <span>{event.type} · {event.path}</span>
+                  <time>{new Date(event.createdAt).toLocaleString()}</time>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {active === "Versions" ? (
+          <section className="admin-panel wide">
+            <div className="panel-heading">
+              <h2>Version history and rollback</h2>
+              <span>{cms.versions.length} snapshots</span>
+            </div>
+            <div className="audit-list">
+              {cms.versions.length === 0 ? (
+                <article>
+                  <strong>No snapshots yet</strong>
+                  <span>Edit content to create rollback snapshots.</span>
+                  <time>local</time>
+                </article>
+              ) : null}
+              {cms.versions.map((version) => (
+                <article key={version.id}>
+                  <strong>{version.label}</strong>
+                  <span>{version.snapshot.brand.name}</span>
+                  <button type="button" onClick={() => restoreVersion(version.id)}>
+                    Restore
+                  </button>
                 </article>
               ))}
             </div>

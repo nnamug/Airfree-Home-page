@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AirfreeCmsData, AuditLog, defaultCmsData, Lead } from "./airfree-content";
+import {
+  AirfreeCmsData,
+  AnalyticsEvent,
+  AuditLog,
+  ContentVersion,
+  defaultCmsData,
+  Lead,
+} from "./airfree-content";
 
 const STORAGE_KEY = "airfree.cms.v1";
+const SESSION_KEY = "airfree.admin.session.v1";
 
 function cloneDefaults(): AirfreeCmsData {
   return JSON.parse(JSON.stringify(defaultCmsData)) as AirfreeCmsData;
@@ -27,6 +35,8 @@ function mergeCmsData(candidate: Partial<AirfreeCmsData>): AirfreeCmsData {
     blogPosts: candidate.blogPosts ?? defaultCmsData.blogPosts,
     leads: candidate.leads ?? defaultCmsData.leads,
     auditLogs: candidate.auditLogs ?? defaultCmsData.auditLogs,
+    analyticsEvents: candidate.analyticsEvents ?? defaultCmsData.analyticsEvents,
+    versions: candidate.versions ?? defaultCmsData.versions,
   };
 }
 
@@ -59,12 +69,47 @@ function makeAudit(action: string, entity: string, beforeValue: unknown, afterVa
   };
 }
 
+function makeEvent(type: AnalyticsEvent["type"], label: string, path: string): AnalyticsEvent {
+  return {
+    id: `event-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    type,
+    label,
+    path,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function createSnapshot(current: AirfreeCmsData, label: string): ContentVersion {
+  const { versions: _versions, ...snapshot } = current;
+
+  return {
+    id: `version-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    label,
+    createdAt: new Date().toISOString(),
+    snapshot,
+  };
+}
+
 export function useAirfreeCms() {
   const [cms, setCms] = useState<AirfreeCmsData>(() => cloneDefaults());
   const [ready, setReady] = useState(false);
+  const [session, setSession] = useState(() => ({
+    authenticated: false,
+    user: "",
+    role: "Viewer",
+    mfaVerified: false,
+  }));
 
   useEffect(() => {
     setCms(readCmsData());
+    const storedSession = window.localStorage.getItem(SESSION_KEY);
+    if (storedSession) {
+      try {
+        setSession(JSON.parse(storedSession));
+      } catch {
+        window.localStorage.removeItem(SESSION_KEY);
+      }
+    }
     setReady(true);
   }, []);
 
@@ -73,6 +118,12 @@ export function useAirfreeCms() {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cms));
     }
   }, [cms, ready]);
+
+  useEffect(() => {
+    if (ready) {
+      window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    }
+  }, [ready, session]);
 
   const leadStats = useMemo(() => {
     const total = cms.leads.length;
@@ -90,9 +141,14 @@ export function useAirfreeCms() {
     setCms((current) => {
       const next = updater(current);
       const audit = makeAudit(action, entity, current[entity as keyof AirfreeCmsData] ?? entity, next[entity as keyof AirfreeCmsData] ?? entity);
+      const version = createSnapshot(current, `Before ${action}`);
+      const event = makeEvent("admin_action", action, "/admin");
+
       return {
         ...next,
+        versions: [version, ...current.versions].slice(0, 20),
         auditLogs: [audit, ...next.auditLogs].slice(0, 80),
+        analyticsEvents: [event, ...next.analyticsEvents].slice(0, 120),
       };
     });
   }
@@ -107,6 +163,10 @@ export function useAirfreeCms() {
     updateCms("Created lead", "leads", (current) => ({
       ...current,
       leads: [nextLead, ...current.leads],
+      analyticsEvents: [
+        makeEvent("lead_created", `Lead created: ${nextLead.inquiry}`, "/#contact"),
+        ...current.analyticsEvents,
+      ],
     }));
   }
 
@@ -114,6 +174,53 @@ export function useAirfreeCms() {
     const next = cloneDefaults();
     next.auditLogs = [makeAudit("Reset CMS", "settings", "custom local content", "default Airfree content"), ...next.auditLogs];
     setCms(next);
+  }
+
+  function restoreVersion(versionId: string) {
+    setCms((current) => {
+      const version = current.versions.find((item) => item.id === versionId);
+      if (!version) {
+        return current;
+      }
+
+      const audit = makeAudit("Restored version", "versions", current.brand.name, version.label);
+      return {
+        ...version.snapshot,
+        versions: [createSnapshot(current, "Before rollback"), ...current.versions].slice(0, 20),
+        auditLogs: [audit, ...current.auditLogs].slice(0, 80),
+        analyticsEvents: [makeEvent("admin_action", `Restored ${version.label}`, "/admin"), ...current.analyticsEvents].slice(0, 120),
+      };
+    });
+  }
+
+  function trackEvent(type: AnalyticsEvent["type"], label: string, path: string) {
+    setCms((current) => ({
+      ...current,
+      analyticsEvents: [makeEvent(type, label, path), ...current.analyticsEvents].slice(0, 120),
+    }));
+  }
+
+  function login(user: string, role: string, mfaCode: string) {
+    const authenticated = user.trim().length > 0 && mfaCode.trim().length >= 4;
+    const nextSession = {
+      authenticated,
+      user: user.trim() || "local-admin@airfree.local",
+      role,
+      mfaVerified: authenticated,
+    };
+    setSession(nextSession);
+    trackEvent("admin_action", `Login ${authenticated ? "succeeded" : "failed"} for ${role}`, "/admin");
+    return authenticated;
+  }
+
+  function logout() {
+    setSession({
+      authenticated: false,
+      user: "",
+      role: "Viewer",
+      mfaVerified: false,
+    });
+    trackEvent("admin_action", "Logged out", "/admin");
   }
 
   function exportCms() {
@@ -128,6 +235,11 @@ export function useAirfreeCms() {
     updateCms,
     addLead,
     resetCms,
+    restoreVersion,
+    trackEvent,
+    session,
+    login,
+    logout,
     exportCms,
   };
 }

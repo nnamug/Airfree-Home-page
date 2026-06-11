@@ -32,6 +32,16 @@ export function GET() {
         description: "Validates a lead payload and returns the production persistence contract.",
       },
       {
+        method: "POST",
+        path: "/api/auth/login",
+        description: "Starts the local Superadmin authentication contract.",
+      },
+      {
+        method: "POST",
+        path: "/api/auth/mfa/verify",
+        description: "Verifies the local MFA contract for a session id.",
+      },
+      {
         method: "GET",
         path: "/api/openapi.json",
         description: "Returns OpenAPI 3.1 documentation for the local API surface.",
@@ -48,15 +58,12 @@ export function GET() {
       },
     ],
     plannedProductionEndpoints: [
-      "POST /api/leads",
       "GET /api/pages",
       "POST /api/pages",
       "PATCH /api/pages/:id",
       "POST /api/media",
       "PATCH /api/seo/:id",
       "GET /api/audit-logs",
-      "POST /api/auth/login",
-      "POST /api/auth/mfa/verify",
     ],
   });
 }

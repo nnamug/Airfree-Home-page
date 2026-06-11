@@ -4,7 +4,7 @@
 
 The project is now a functional localhost CMS prototype plus corporate website.
 
-Estimated completion against the full master prompt: 55-65%.
+Estimated completion against the full master prompt: 72-78%.
 
 ## Now Functional On Localhost
 
@@ -23,7 +23,15 @@ Estimated completion against the full master prompt: 55-65%.
 - Audit log generation for local admin changes.
 - Runtime toggles for animations, maintenance mode, and security posture.
 - JSON content export from Superadmin.
+- Local Superadmin login and MFA simulation.
+- Role-aware session display.
+- Local analytics events for page views, leads, and admin actions.
+- Content version snapshots before admin changes.
+- Local rollback from saved snapshots.
+- API contracts for login and MFA verification.
 - Static API endpoint exposing default CMS data.
+- OpenAPI endpoint and health endpoint.
+- Docker Compose, Dockerfile, Nginx reverse proxy scaffold, and security headers.
 - Drizzle schema and generated SQL migration for production persistence.
 - GitHub source repository workflow.
 

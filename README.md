@@ -29,6 +29,8 @@ npm run dev
 - `/api/health` - Service/module health endpoint.
 - `/api/docs` - Local API documentation.
 - `/api/openapi.json` - OpenAPI 3.1 contract.
+- `/api/auth/login` - Local Superadmin login contract.
+- `/api/auth/mfa/verify` - Local MFA verification contract.
 - `/sitemap.xml` - Generated sitemap.
 - `/robots.txt` - Crawler policy.
 

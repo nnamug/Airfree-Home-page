@@ -60,6 +60,54 @@ export function GET() {
           },
         },
       },
+      "/api/auth/login": {
+        post: {
+          summary: "Start local admin login contract",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["email"],
+                  properties: {
+                    email: { type: "string", format: "email" },
+                    role: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            "200": { description: "Local session created; MFA required" },
+            "422": { description: "Email missing" },
+          },
+        },
+      },
+      "/api/auth/mfa/verify": {
+        post: {
+          summary: "Verify local MFA contract",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["sessionId", "code"],
+                  properties: {
+                    sessionId: { type: "string" },
+                    code: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            "200": { description: "Local MFA accepted" },
+            "422": { description: "Invalid MFA payload" },
+          },
+        },
+      },
     },
   });
 }
