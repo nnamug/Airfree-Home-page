@@ -9,7 +9,7 @@ This workspace contains a deployable Airfree corporate website foundation built 
 - CMS-style content registry in `lib/airfree-content.ts`.
 - JSON content endpoint at `/api/content`.
 - Drizzle schema for users, roles, permissions, pages, sections, components, media, SEO, leads, and audit logs.
-- Sites hosting bindings for D1 (`DB`) and R2 (`MEDIA_BUCKET`).
+- Localhost/GitHub-oriented source with Docker and Nginx scaffolding.
 
 ## Local Commands
 
@@ -28,6 +28,10 @@ npm run dev
 - `/resources` - Public resource listing.
 - `/api/health` - Service/module health endpoint.
 - `/api/docs` - Local API documentation.
+- `/api/pages` - Page records and publication status.
+- `/api/media` - Media metadata contract.
+- `/api/seo` - SEO settings contract.
+- `/api/audit-logs` - Audit log contract.
 - `/api/openapi.json` - OpenAPI 3.1 contract.
 - `/api/auth/login` - Local Superadmin login contract.
 - `/api/auth/mfa/verify` - Local MFA verification contract.

@@ -23,6 +23,8 @@ export default function AdminCms() {
     leadStats,
     updateCms,
     resetCms,
+    importCms,
+    publishContent,
     restoreVersion,
     session,
     login,
@@ -31,6 +33,8 @@ export default function AdminCms() {
   } = useAirfreeCms();
   const [active, setActive] = useState("Dashboard");
   const [copied, setCopied] = useState(false);
+  const [importText, setImportText] = useState("");
+  const [importStatus, setImportStatus] = useState("");
   const [loginForm, setLoginForm] = useState({
     user: "superadmin@airfree.local",
     role: "Superadmin",
@@ -107,6 +111,40 @@ export default function AdminCms() {
     }));
   }
 
+  function uploadMedia(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const type = file.type.startsWith("video/")
+        ? "video"
+        : file.type.includes("svg")
+          ? "icon"
+          : file.type.startsWith("image/")
+            ? "image"
+            : "document";
+
+      const next: MediaAsset = {
+        id: `media-${Date.now()}`,
+        name: file.name,
+        type,
+        url: String(reader.result),
+        altText: file.name.replace(/\.[^.]+$/, "").replaceAll("-", " "),
+        status: "active",
+      };
+
+      updateCms("Uploaded local media", "mediaAssets", (current) => ({
+        ...current,
+        mediaAssets: [next, ...current.mediaAssets],
+      }));
+    };
+    reader.readAsDataURL(file);
+    event.target.value = "";
+  }
+
   function addBlogPost() {
     const next: BlogPost = {
       id: `post-${Date.now()}`,
@@ -125,6 +163,15 @@ export default function AdminCms() {
     await navigator.clipboard.writeText(exportCms());
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
+  }
+
+  function submitImport(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const ok = importCms(importText);
+    setImportStatus(ok ? "Imported CMS JSON." : "Import failed. Check JSON shape.");
+    if (ok) {
+      setImportText("");
+    }
   }
 
   function submitLogin(event: FormEvent<HTMLFormElement>) {
@@ -207,6 +254,9 @@ export default function AdminCms() {
             </a>
             <button type="button" className="admin-button" onClick={logout}>
               Sign out
+            </button>
+            <button type="button" className="admin-button" onClick={() => publishContent("Manual Superadmin publish")}>
+              Publish
             </button>
             <button type="button" className="admin-danger" onClick={resetCms}>
               Reset CMS
@@ -351,7 +401,13 @@ export default function AdminCms() {
           <section className="admin-panel wide">
             <div className="panel-heading">
               <h2>Media library</h2>
-              <button type="button" onClick={addMedia}>Add media</button>
+              <div className="panel-actions">
+                <label className="file-button">
+                  Upload
+                  <input type="file" accept="image/*,video/*,.pdf,.svg" onChange={uploadMedia} />
+                </label>
+                <button type="button" onClick={addMedia}>Add media</button>
+              </div>
             </div>
             <div className="content-table media-table">
               {cms.mediaAssets.map((asset) => (
@@ -542,9 +598,17 @@ export default function AdminCms() {
         {active === "Audit" ? (
           <section className="admin-panel wide">
             <div className="panel-heading">
-              <h2>Audit logs and export</h2>
+              <h2>Audit logs, export, and import</h2>
               <button type="button" onClick={copyExport}>{copied ? "Copied" : "Copy JSON"}</button>
             </div>
+            <form className="import-panel" onSubmit={submitImport}>
+              <label>
+                Import CMS JSON
+                <textarea value={importText} onChange={(event) => setImportText(fieldValue(event))} placeholder="Paste exported CMS JSON here" />
+              </label>
+              <button type="submit">Import</button>
+              {importStatus ? <span>{importStatus}</span> : null}
+            </form>
             <div className="audit-list">
               {cms.auditLogs.map((log) => (
                 <article key={log.id}>

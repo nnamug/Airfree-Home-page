@@ -23,6 +23,36 @@ export function GET() {
       },
       {
         method: "GET",
+        path: "/api/pages",
+        description: "Returns public page records and publication status.",
+      },
+      {
+        method: "GET",
+        path: "/api/media",
+        description: "Returns media metadata records.",
+      },
+      {
+        method: "POST",
+        path: "/api/media",
+        description: "Accepts local media metadata contract for future object storage persistence.",
+      },
+      {
+        method: "GET",
+        path: "/api/seo",
+        description: "Returns SEO metadata and generated SEO route information.",
+      },
+      {
+        method: "PATCH",
+        path: "/api/seo",
+        description: "Validates SEO update contract for future database persistence.",
+      },
+      {
+        method: "GET",
+        path: "/api/audit-logs",
+        description: "Returns seed audit logs and production audit persistence note.",
+      },
+      {
+        method: "GET",
         path: "/api/leads",
         description: "Returns seed lead records and the production persistence note.",
       },
@@ -58,12 +88,10 @@ export function GET() {
       },
     ],
     plannedProductionEndpoints: [
-      "GET /api/pages",
       "POST /api/pages",
       "PATCH /api/pages/:id",
-      "POST /api/media",
-      "PATCH /api/seo/:id",
-      "GET /api/audit-logs",
+      "POST /api/media/upload-url",
+      "POST /api/content/versions/:id/restore",
     ],
   });
 }

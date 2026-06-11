@@ -4,7 +4,7 @@
 
 The project is now a functional localhost CMS prototype plus corporate website.
 
-Estimated completion against the full master prompt: 72-78%.
+Estimated completion against the full master prompt: 78-82%.
 
 ## Now Functional On Localhost
 
@@ -28,7 +28,11 @@ Estimated completion against the full master prompt: 72-78%.
 - Local analytics events for page views, leads, and admin actions.
 - Content version snapshots before admin changes.
 - Local rollback from saved snapshots.
+- Manual content publish action with publish analytics event.
+- CMS JSON import and export.
+- Local media upload simulation with metadata and data URL storage.
 - API contracts for login and MFA verification.
+- API contracts for pages, media, SEO, and audit logs.
 - Static API endpoint exposing default CMS data.
 - OpenAPI endpoint and health endpoint.
 - Docker Compose, Dockerfile, Nginx reverse proxy scaffold, and security headers.

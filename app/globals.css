@@ -887,6 +887,34 @@ textarea {
   font-size: 20px;
 }
 
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px solid #cbd8e5;
+  border-radius: 6px;
+  background: white;
+  color: #102034;
+  padding: 0 14px;
+  font-weight: 800;
+}
+
+.file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .content-table {
   display: grid;
   gap: 8px;
@@ -1121,6 +1149,47 @@ textarea {
   display: grid;
   gap: 10px;
   margin-top: 18px;
+}
+
+.import-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #e2e9f0;
+  border-radius: 8px;
+  background: #f9fbfd;
+}
+
+.import-panel label {
+  display: grid;
+  gap: 8px;
+  color: #52667c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.import-panel textarea {
+  min-height: 120px;
+  border: 1px solid #cbd8e5;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.import-panel button {
+  width: fit-content;
+  min-height: 40px;
+  border: 1px solid #cbd8e5;
+  border-radius: 6px;
+  background: white;
+  color: #102034;
+  padding: 0 14px;
+  font-weight: 800;
+}
+
+.import-panel span {
+  color: #0f7f98;
+  font-weight: 800;
 }
 
 .audit-list article {

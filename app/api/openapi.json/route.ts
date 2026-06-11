@@ -29,6 +29,41 @@ export function GET() {
           responses: { "200": { description: "Platform list" } },
         },
       },
+      "/api/pages": {
+        get: {
+          summary: "Public page records",
+          responses: { "200": { description: "Page list and publication status" } },
+        },
+      },
+      "/api/media": {
+        get: {
+          summary: "Media metadata records",
+          responses: { "200": { description: "Media list" } },
+        },
+        post: {
+          summary: "Accept media metadata contract",
+          responses: {
+            "201": { description: "Media metadata accepted" },
+            "415": { description: "Unsupported media contract content type" },
+          },
+        },
+      },
+      "/api/seo": {
+        get: {
+          summary: "SEO metadata",
+          responses: { "200": { description: "SEO settings" } },
+        },
+        patch: {
+          summary: "Validate SEO update contract",
+          responses: { "200": { description: "SEO metadata merged" } },
+        },
+      },
+      "/api/audit-logs": {
+        get: {
+          summary: "Audit log records",
+          responses: { "200": { description: "Audit log list" } },
+        },
+      },
       "/api/leads": {
         get: {
           summary: "Seed lead records",

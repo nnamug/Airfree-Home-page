@@ -176,6 +176,30 @@ export function useAirfreeCms() {
     setCms(next);
   }
 
+  function importCms(json: string) {
+    try {
+      const imported = mergeCmsData(JSON.parse(json) as Partial<AirfreeCmsData>);
+      setCms((current) => ({
+        ...imported,
+        versions: [createSnapshot(current, "Before CMS import"), ...current.versions].slice(0, 20),
+        auditLogs: [makeAudit("Imported CMS JSON", "content", "local CMS", "imported JSON"), ...imported.auditLogs].slice(0, 80),
+        analyticsEvents: [makeEvent("admin_action", "Imported CMS JSON", "/admin"), ...imported.analyticsEvents].slice(0, 120),
+      }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function publishContent(label = "Published content") {
+    setCms((current) => ({
+      ...current,
+      versions: [createSnapshot(current, label), ...current.versions].slice(0, 20),
+      auditLogs: [makeAudit("Published content", "content", "draft", label), ...current.auditLogs].slice(0, 80),
+      analyticsEvents: [makeEvent("content_publish", label, "/admin"), ...current.analyticsEvents].slice(0, 120),
+    }));
+  }
+
   function restoreVersion(versionId: string) {
     setCms((current) => {
       const version = current.versions.find((item) => item.id === versionId);
@@ -235,6 +259,8 @@ export function useAirfreeCms() {
     updateCms,
     addLead,
     resetCms,
+    importCms,
+    publishContent,
     restoreVersion,
     trackEvent,
     session,
