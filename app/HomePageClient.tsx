@@ -116,6 +116,9 @@ export default function HomePageClient() {
                   <li key={capability}>{capability}</li>
                 ))}
               </ul>
+              <a className="text-link" href={`/platforms/${platform.slug}`}>
+                View platform
+              </a>
             </article>
           ))}
         </div>
@@ -186,6 +189,9 @@ export default function HomePageClient() {
           </p>
           <a href="/admin" className="button-primary light-button">
             Open Superadmin
+          </a>
+          <a href="/resources" className="text-link resource-link">
+            View resources
           </a>
         </article>
         <article id="contact" className="contact-panel">
