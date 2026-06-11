@@ -20,6 +20,79 @@ export type AdminModule = {
   health: "operational" | "attention" | "scheduled";
 };
 
+export type Lead = {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  inquiry: string;
+  status: "new" | "in_progress" | "closed";
+  createdAt: string;
+};
+
+export type MediaAsset = {
+  id: string;
+  name: string;
+  type: "image" | "video" | "document" | "animation" | "icon" | "logo";
+  url: string;
+  altText: string;
+  status: "active" | "inactive";
+};
+
+export type BlogPost = {
+  id: string;
+  title: string;
+  category: string;
+  status: "draft" | "scheduled" | "published";
+  publishAt: string;
+};
+
+export type SocialLink = {
+  network: string;
+  url: string;
+  active: boolean;
+};
+
+export type SeoSettings = {
+  metaTitle: string;
+  metaDescription: string;
+  canonicalUrl: string;
+  keywords: string;
+  schemaType: string;
+};
+
+export type AuditLog = {
+  id: string;
+  actor: string;
+  action: string;
+  entity: string;
+  beforeValue: string;
+  afterValue: string;
+  createdAt: string;
+};
+
+export type AirfreeCmsData = {
+  brand: typeof brand;
+  navigation: string[];
+  platforms: Platform[];
+  metrics: Metric[];
+  architectureLayers: string[];
+  adminModules: AdminModule[];
+  industries: string[];
+  socialLinks: SocialLink[];
+  mediaAssets: MediaAsset[];
+  blogPosts: BlogPost[];
+  leads: Lead[];
+  seo: SeoSettings;
+  auditLogs: AuditLog[];
+  settings: {
+    animationsEnabled: boolean;
+    maintenanceMode: boolean;
+    securityLevel: "standard" | "hardened" | "restricted";
+  };
+};
+
 export const brand = {
   name: "AIRFREE",
   promise: "Building Sovereign Digital Infrastructure",
@@ -170,3 +243,97 @@ export const leadStages = [
   { label: "In progress", value: "17", trend: "+9%" },
   { label: "Closed", value: "8", trend: "+4%" },
 ];
+
+export const defaultCmsData: AirfreeCmsData = {
+  brand,
+  navigation,
+  platforms,
+  metrics,
+  architectureLayers,
+  adminModules,
+  industries: [
+    "Government",
+    "Telecom",
+    "Financial services",
+    "Logistics",
+    "Energy",
+    "Smart cities",
+  ],
+  socialLinks: [
+    { network: "LinkedIn", url: "https://linkedin.com/company/airfree", active: true },
+    { network: "X", url: "https://x.com/airfree", active: true },
+    { network: "GitHub", url: "https://github.com/nnamug/Airfree-Home-page", active: true },
+    { network: "YouTube", url: "https://youtube.com/@airfree", active: false },
+    { network: "WhatsApp", url: "https://wa.me/", active: false },
+  ],
+  mediaAssets: [
+    {
+      id: "media-hero-grid",
+      name: "Infrastructure operations grid",
+      type: "animation",
+      url: "css:ops-map",
+      altText: "Animated infrastructure operations map",
+      status: "active",
+    },
+    {
+      id: "media-logo",
+      name: "Airfree monogram",
+      type: "logo",
+      url: "text:AF",
+      altText: "Airfree brand mark",
+      status: "active",
+    },
+  ],
+  blogPosts: [
+    {
+      id: "post-sovereign-infra",
+      title: "Why sovereign infrastructure matters for digital economies",
+      category: "Sovereignty",
+      status: "draft",
+      publishAt: "2026-07-01",
+    },
+    {
+      id: "post-location-stack",
+      title: "Designing a trusted location intelligence stack",
+      category: "Geospatial",
+      status: "scheduled",
+      publishAt: "2026-07-15",
+    },
+  ],
+  leads: [
+    {
+      id: "lead-sample",
+      name: "Sample Enterprise Lead",
+      company: "Airfree Demo",
+      email: "lead@example.com",
+      phone: "",
+      inquiry: "Full platform suite",
+      status: "new",
+      createdAt: "2026-06-10T12:00:00.000Z",
+    },
+  ],
+  seo: {
+    metaTitle: "AIRFREE | Sovereign Digital Infrastructure",
+    metaDescription:
+      "Official corporate website and platform gateway for Airfree sovereign digital infrastructure.",
+    canonicalUrl: "https://airfree.local/",
+    keywords: "sovereign infrastructure, geospatial, cloud, domains, mail, workspace",
+    schemaType: "Organization",
+  },
+  auditLogs: [
+    {
+      id: "audit-seed",
+      actor: "System",
+      action: "Seeded CMS",
+      entity: "content",
+      beforeValue: "empty",
+      afterValue: "default Airfree content",
+      createdAt: "2026-06-10T12:00:00.000Z",
+    },
+  ],
+  settings: {
+    animationsEnabled: true,
+    maintenanceMode: false,
+    securityLevel: "hardened",
+  },
+};

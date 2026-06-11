@@ -2,6 +2,7 @@ import {
   adminModules,
   architectureLayers,
   brand,
+  defaultCmsData,
   metrics,
   navigation,
   platforms,
@@ -11,6 +12,7 @@ export const dynamic = "force-static";
 
 export function GET() {
   return Response.json({
+    ...defaultCmsData,
     brand,
     navigation,
     metrics,

@@ -45,6 +45,10 @@ select {
   font: inherit;
 }
 
+textarea {
+  font: inherit;
+}
+
 .hero-band {
   position: relative;
   overflow: hidden;
@@ -573,6 +577,21 @@ select {
   background: var(--navy);
 }
 
+.maintenance-banner {
+  padding: 12px 16px;
+  background: #fef3c7;
+  color: #713f12;
+  font-weight: 800;
+  text-align: center;
+}
+
+.form-status {
+  margin: 0;
+  color: #92ecf9 !important;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .admin-shell {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -599,13 +618,20 @@ select {
   gap: 8px;
 }
 
-.admin-sidebar nav a {
+.admin-sidebar nav a,
+.admin-sidebar nav button {
   padding: 12px;
   border-radius: 6px;
+  border: 0;
+  background: transparent;
   color: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+  text-align: left;
 }
 
-.admin-sidebar nav a:hover {
+.admin-sidebar nav a:hover,
+.admin-sidebar nav button:hover,
+.admin-sidebar nav button.active {
   background: rgba(255, 255, 255, 0.08);
   color: white;
 }
@@ -622,6 +648,12 @@ select {
   margin-bottom: 24px;
 }
 
+.admin-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .admin-header h1 {
   max-width: 760px;
   margin: 0;
@@ -632,6 +664,22 @@ select {
 .admin-button {
   border-color: #bfd0df;
   color: #0d1726;
+}
+
+.admin-danger,
+.panel-heading button {
+  min-height: 42px;
+  border: 1px solid #cbd8e5;
+  border-radius: 6px;
+  background: white;
+  color: #102034;
+  padding: 0 14px;
+  font-weight: 800;
+}
+
+.admin-danger {
+  border-color: #fecaca;
+  color: #991b1b;
 }
 
 .admin-kpis {
@@ -703,6 +751,76 @@ select {
   color: #52667c;
 }
 
+.media-table .table-row,
+.blog-table .table-row {
+  grid-template-columns: 1fr 150px 1fr 100px;
+}
+
+.social-table .table-row {
+  grid-template-columns: 160px 1fr 110px;
+}
+
+.lead-table .table-row {
+  grid-template-columns: 1fr 1fr 1fr 150px;
+}
+
+.table-row input,
+.table-row select,
+.form-panel input,
+.form-panel textarea,
+.form-panel select,
+.editor-card input,
+.editor-card textarea,
+.editor-card select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbd8e5;
+  border-radius: 6px;
+  background: white;
+  color: #102034;
+  padding: 9px 11px;
+}
+
+.form-panel textarea,
+.editor-card textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.form-panel,
+.editor-card {
+  display: grid;
+  gap: 16px;
+}
+
+.form-panel label,
+.editor-card label {
+  display: grid;
+  gap: 8px;
+  color: #52667c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.two-col-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.editor-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.editor-card {
+  padding: 18px;
+  border: 1px solid #e2e9f0;
+  border-radius: 8px;
+  background: #f9fbfd;
+}
+
 .table-row strong {
   color: #0d1726;
 }
@@ -720,6 +838,22 @@ select {
   display: grid;
   gap: 12px;
   margin-top: 18px;
+}
+
+.status-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.status-grid p {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: #f6f8fb;
 }
 
 .lead-stack article {
@@ -776,6 +910,53 @@ select {
 
 .role-grid span {
   color: #52667c;
+}
+
+.role-grid em {
+  color: #0f7f98;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.audit-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.audit-list article {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #e2e9f0;
+  border-radius: 6px;
+  background: #f9fbfd;
+}
+
+.audit-list span,
+.audit-list time {
+  color: #52667c;
+  font-size: 13px;
+}
+
+.toggle-row {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center;
+  gap: 10px !important;
+}
+
+.toggle-row input {
+  width: 18px;
+  min-height: 18px;
+}
+
+.ops-map[data-disabled="true"] .orbit,
+.ops-map[data-disabled="true"] .signal {
+  animation: none;
 }
 
 @keyframes rotate {
@@ -876,6 +1057,15 @@ select {
   }
 
   .table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .media-table .table-row,
+  .blog-table .table-row,
+  .social-table .table-row,
+  .lead-table .table-row,
+  .audit-list article,
+  .two-col-fields {
     grid-template-columns: 1fr;
   }
 
